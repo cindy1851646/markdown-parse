@@ -20,8 +20,10 @@ public class MarkdownParse {
                 break;
             }
 
-            if(markdown.charAt(nextOpenBracket-1)=='!'){
+            if(markdown.charAt(nextOpenBracket-1)=='!' ||
+                nextCloseBracket != openParen-1){
                 currentIndex = closeParen +1;
+                continue;
             }
 
             toReturn.add(markdown.substring(openParen + 1, closeParen));
