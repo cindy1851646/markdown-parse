@@ -60,22 +60,20 @@ public class MarkdownParse {
         int currentIndex = 0;
         while(currentIndex < markdown.length()) {
             int nextOpenBracket = markdown.indexOf("[", currentIndex);
-            System.out.format("%d\t%d\t%s\n", currentIndex, nextOpenBracket, toReturn);
-            int nextCloseBracket = markdown.indexOf("]", nextOpenBracket);
-            int openParen = markdown.indexOf("(", nextCloseBracket);
-            int closeParen = markdown.indexOf(")", openParen);
-            if(nextOpenBracket == -1 || nextCloseBracket == -1
-                  || closeParen == -1 || openParen == -1) {
-                return toReturn;
+            if(nextOpenBracket == -1) {
+                break;
             }
-            String potentialLink = markdown.substring(openParen + 1, closeParen);
-            if(potentialLink.indexOf(" ") == -1 && potentialLink.indexOf("\n") == -1) {
-                toReturn.add(potentialLink);
-                currentIndex = closeParen + 1;
+            if(nextOpenBracket > 0 && markdown.charAt(nextOpenBracket - 1) == '!') {
+                break;
             }
-            else {
-                currentIndex = currentIndex + 1;
+            int nextCloseBracket = markdown.indexOf("](", nextOpenBracket);
+            if(nextCloseBracket == -1) {
+                break;
             }
+            int closeParen = markdown.indexOf(")", nextCloseBracket);
+            toReturn.add(markdown.substring(nextCloseBracket + 2, closeParen));
+            currentIndex = closeParen + 1;
+            // System.out.format("%d\t%d\t%d\t%d\n", currentIndex, nextOpenBracket, nextCloseBracket, closeParen);
         }
         return toReturn;
     }
